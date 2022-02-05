@@ -3,7 +3,9 @@
 
 #include "SCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 // Sets default values
 ASCharacter::ASCharacter()
 {
@@ -11,9 +13,14 @@ ASCharacter::ASCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	//instantiate camera and spring arm
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
+	SpringArmComp->bUsePawnControlRotation = true; //have camera update position with movement
 	SpringArmComp->SetupAttachment(RootComponent); //attach spring arm to PlayerCharacter
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
-	CameraComp->SetupAttachment(SpringArmComp); //attach camera to spring arm 
+	CameraComp->SetupAttachment(SpringArmComp); //attach camera to spring arm
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	bUseControllerRotationYaw = false;
 }
 
 // Called when the game starts or when spawned
@@ -22,10 +29,7 @@ void ASCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 }
-void ASCharacter::MoveForward(float Value)
-{
-	AddMovementInput(GetActorForwardVector(), Value);
-}
+
 // Called every frame
 void ASCharacter::Tick(float DeltaTime)
 {
@@ -39,7 +43,35 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	//player movement
 	PlayerInputComponent->BindAxis("MoveForward", this, &ASCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ASCharacter::MoveRight);
+	
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	
 
 }
+//player movement functions
+void ASCharacter::MoveForward(float Value)
+{
+	
+	FRotator ControlRot = GetControlRotation();
+	ControlRot.Pitch = 0.0f;
+	ControlRot.Roll = 0.0f;
+	
+	AddMovementInput(ControlRot.Vector(), Value);
+}
+void ASCharacter::MoveRight(float Value)
+{
+	//get right axis of rotator
+	FRotator ControlRot = GetControlRotation();
+	ControlRot.Pitch = 0.0f;
+	ControlRot.Roll = 0.0f;
 
+	//NOTE: ROTATION IN UNREAL
+	//X = Forward (RED)
+	//Y = Right (GREEN)
+	//Z = Up (BLUE)
+	FVector RightVector = FRotationMatrix(ControlRot).GetScaledAxis(EAxis::Y);
+	
+	AddMovementInput(RightVector, Value);
+}
