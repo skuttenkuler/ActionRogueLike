@@ -15,11 +15,11 @@ ASCharacter::ASCharacter()
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
 	SpringArmComp->bUsePawnControlRotation = true; //have camera update position with movement
 	SpringArmComp->SetupAttachment(RootComponent); //attach spring arm to PlayerCharacter
+	
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArmComp); //attach camera to spring arm
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-
 	bUseControllerRotationYaw = false;
 }
 
@@ -44,7 +44,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	//player movement
 	PlayerInputComponent->BindAxis("MoveForward", this, &ASCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASCharacter::MoveRight);
-	
+
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	
@@ -53,25 +53,23 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 //player movement functions
 void ASCharacter::MoveForward(float Value)
 {
-	
-	FRotator ControlRot = GetControlRotation();
-	ControlRot.Pitch = 0.0f;
-	ControlRot.Roll = 0.0f;
-	
-	AddMovementInput(ControlRot.Vector(), Value);
-}
-void ASCharacter::MoveRight(float Value)
-{
-	//get right axis of rotator
 	FRotator ControlRot = GetControlRotation();
 	ControlRot.Pitch = 0.0f;
 	ControlRot.Roll = 0.0f;
 
+	AddMovementInput(ControlRot.Vector(), Value);
+}
+void ASCharacter::MoveRight(float Value)
+{
+	//get right axis vector
+	FRotator ControlRot = GetControlRotation();
+	ControlRot.Pitch = 0.0f;
+	ControlRot.Roll = 0.0f;
 	//NOTE: ROTATION IN UNREAL
 	//X = Forward (RED)
 	//Y = Right (GREEN)
 	//Z = Up (BLUE)
 	FVector RightVector = FRotationMatrix(ControlRot).GetScaledAxis(EAxis::Y);
-	
+
 	AddMovementInput(RightVector, Value);
 }
