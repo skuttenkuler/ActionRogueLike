@@ -20,11 +20,13 @@ public:
 protected:
 	//make sure editor can display
 	UPROPERTY(VisibleAnywhere);
-	USphereComponent* SphereComp;
+	USphereComponent* SphereComp; //collision component
+
 	UPROPERTY(VisibleAnywhere);
-	UProjectileMovementComponent* MovementComp;
+	UProjectileMovementComponent* MovementComp; //movement component to give velocity
+
 	UPROPERTY(VisibleAnywhere);
-	UParticleSystemComponent* EffectComp;
+	UParticleSystemComponent* EffectComp; //something to show in game world
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
