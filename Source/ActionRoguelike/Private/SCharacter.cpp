@@ -50,6 +50,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	
 	//magic projectile action trigger on key press
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
+	//jump
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASCharacter::Jump);
 }
 //player movement functions
 void ASCharacter::MoveForward(float Value)
@@ -74,6 +76,10 @@ void ASCharacter::MoveRight(float Value)
 
 	AddMovementInput(RightVector, Value);
 }
+//void ASCharacter::Jump()
+//{
+	
+//}
 
 void ASCharacter::PrimaryAttack()
 {

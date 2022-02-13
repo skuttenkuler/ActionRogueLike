@@ -12,8 +12,10 @@ ASMagicProjectile::ASMagicProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
+	SphereComp->SetCollisionProfileName("Projectile"); //create base projectile collision profile in editor for all projectiles
 	RootComponent = SphereComp; //set the root to the sphere
-	//instantiate particle and attach to sphere
+
+	//instantiate particle effect and attach to sphere
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
 	EffectComp->SetupAttachment(SphereComp);
 
