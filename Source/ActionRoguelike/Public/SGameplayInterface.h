@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "SInterface.generated.h"
+#include "SGameplayInterface.generated.h"
 // purpose -> shared API without specifying (example: treasure chest and dead player both have interact or loot action bound by interface)
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class USInterface : public UInterface
+class USGameplayInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,10 +16,13 @@ class USInterface : public UInterface
 /**
  * 
  */
-class ACTIONROGUELIKE_API ISInterface
+class ACTIONROGUELIKE_API ISGameplayInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	//set interaction function
+	UFUNCTION(BlueprintNativeEvent)//expects C++ implementation but can use it in BluePrint if we want
+	void Interact(APawn* IntstigatorPawn);
 };
