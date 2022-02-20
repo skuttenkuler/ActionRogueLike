@@ -2,6 +2,7 @@
 
 
 #include "SInteractionComponent.h"
+#include "SGameplayInterface.h"
 
 // Sets default values for this component's properties
 USInteractionComponent::USInteractionComponent()
@@ -12,6 +13,8 @@ USInteractionComponent::USInteractionComponent()
 
 	// ...
 }
+
+
 
 
 // Called when the game starts
@@ -31,4 +34,30 @@ void USInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	// ...
 }
+//COLLISION QUERY FOR INTERACTION
+void USInteractionComponent::PrimaryInteract()
+{
+	FCollisionObjectQueryParams ObjectQueryParams;
+	ObjectQueryParams.AddObjectTypesToQuery((ECC_WorldDynamic));//make sure our the object type we are querying for is of World Dynamic
 
+	AActor* MyOwner = GetOwner();//get origin(player)
+	FVector	End,EyeLocation;
+	FRotator EyeRotation;
+	MyOwner->GetActorEyesViewPoint(EyeLocation,EyeRotation);
+
+	End = EyeLocation + (EyeRotation.Vector() * 1000);
+	
+	FHitResult Hit;
+	GetWorld()->LineTraceSingleByObjectType(Hit,EyeLocation, End, ObjectQueryParams);
+
+	//get the actor we want this to be uhtilized on 
+	AActor* HitActor = Hit.GetActor();
+	if(HitActor) //only run if this hit actor is not a null
+	{
+		if(HitActor->Implements<ISGameplayInterface>())
+		{
+			APawn* MyPawn = Cast<APawn>(MyOwner);//cast our actor to pawn
+			ISGameplayInterface::Execute_Interact(HitActor,MyPawn);
+		}
+	}
+}

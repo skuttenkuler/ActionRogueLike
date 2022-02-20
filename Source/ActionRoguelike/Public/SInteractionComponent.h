@@ -15,7 +15,7 @@ class ACTIONROGUELIKE_API USInteractionComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	USInteractionComponent();
-
+	void PrimaryInteract();
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
