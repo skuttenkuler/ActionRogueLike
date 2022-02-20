@@ -54,7 +54,7 @@ void USInteractionComponent::PrimaryInteract()
 	AActor* HitActor = Hit.GetActor();
 	if(HitActor) //only run if this hit actor is not a null
 	{
-		if(HitActor->Implements<ISGameplayInterface>())
+		if(HitActor->Implements<USGameplayInterface>())
 		{
 			APawn* MyPawn = Cast<APawn>(MyOwner);//cast our actor to pawn
 			ISGameplayInterface::Execute_Interact(HitActor,MyPawn);

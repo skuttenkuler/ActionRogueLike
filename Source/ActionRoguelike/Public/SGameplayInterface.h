@@ -24,5 +24,5 @@ class ACTIONROGUELIKE_API ISGameplayInterface
 public:
 	//set interaction function
 	UFUNCTION(BlueprintNativeEvent)//expects C++ implementation but can use it in BluePrint if we want
-	void Interact(APawn* IntstigatorPawn);
+	void Interact(APawn* InstigatorPawn);
 };
